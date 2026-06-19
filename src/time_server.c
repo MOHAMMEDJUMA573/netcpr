@@ -10,7 +10,7 @@ int main()
     printf("--- Configuring the local addresses ---\n");
     struct addrinfo hints;
     memset(&hints, 0, sizeof(hints));
-    hints.ai_family = AF_INET;
+    hints.ai_family = AF_INET6;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE;
     struct addrinfo *bind_address;
@@ -24,6 +24,12 @@ int main()
     server_socket  = socket(bind_address->ai_family, bind_address->ai_socktype, bind_address->ai_protocol);
     if (server_socket < 0) {
         fprintf(stderr, "socket() failed.\t(%d)\n", errno);
+        return 1;
+    }
+    /* dual stack socket setup by removing ipv6_only default: i suspect its no longer default*/
+    int option = 0;
+    if((setsockopt(server_socket,IPPROTO_IPV6, IPV6_V6ONLY, (void*)&option, sizeof(option))) != 0) {
+        fprintf(stderr, "setsockopt() failed.\t(%d)", errno);
         return 1;
     }
     /*binding the socket to the address*/
