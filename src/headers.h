@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <ctype.h>
 /*Macros*/
 #define CLOSESOCKET(s) close(s)
 #endif
